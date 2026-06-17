@@ -1,0 +1,534 @@
+{
+  "categories": [
+    {
+      "id": "javascript",
+      "name": "JavaScript & ES6+",
+      "icon": "⚡",
+      "color": "#F7DF1E",
+      "description": "Closures, async, scope, destructuring, ES6+"
+    },
+    {
+      "id": "typescript",
+      "name": "TypeScript",
+      "icon": "🔷",
+      "color": "#3178C6",
+      "description": "Types, Interfaces, Generics, Utility Types"
+    },
+    {
+      "id": "react_next",
+      "name": "React & Next.js",
+      "icon": "⚛️",
+      "color": "#61DAFB",
+      "description": "Hooks, lifecycle, SSR, SSG, App Router"
+    },
+    {
+      "id": "clean_code",
+      "name": "Clean Code & SOLID",
+      "icon": "🧹",
+      "color": "#4CAF50",
+      "description": "SOLID, DRY, patterns, clean architecture"
+    },
+    {
+      "id": "performance",
+      "name": "Performance & CSS",
+      "icon": "🚀",
+      "color": "#FF5722",
+      "description": "Lazy loading, code splitting, CSS architecture"
+    },
+    {
+      "id": "testing",
+      "name": "Testing",
+      "icon": "🧪",
+      "color": "#9C27B0",
+      "description": "Jest, Vitest, React Testing Library, Cypress"
+    },
+    {
+      "id": "behavioral",
+      "name": "Behavioral & HR",
+      "icon": "🤝",
+      "color": "#2196F3",
+      "description": "STAR method, soft skills, your real experience"
+    },
+    {
+      "id": "accessibility",
+      "name": "Accessibility & Web APIs",
+      "icon": "♿",
+      "color": "#009688",
+      "description": "WCAG, WAI-ARIA, Storage APIs, Web APIs"
+    }
+  ],
+  "questions": [
+    {
+      "id": "js_001",
+      "categoryId": "javascript",
+      "difficulty": "beginner",
+      "type": "theory",
+      "question": "What is the difference between 'var', 'let', and 'const'? What is hoisting?",
+      "options": [
+        "They are identical; hoisting means variables are moved to the bottom",
+        "var is function-scoped and hoisted (initialized as undefined); let/const are block-scoped with TDZ. const cannot be reassigned",
+        "let is global-scoped, const is block-scoped, var is file-scoped",
+        "const makes values completely immutable including nested object properties"
+      ],
+      "correctAnswer": 1,
+      "explanation": "var is function-scoped and HOISTED (initialized as undefined before code runs). let and const are BLOCK-scoped and have a Temporal Dead Zone (TDZ) — accessing them before declaration throws ReferenceError. const prevents REASSIGNMENT of the binding but does NOT freeze objects — their properties can still change.",
+      "codeExample": "// Hoisting with var\nconsole.log(x); // undefined (NOT an error!)\nvar x = 5;\n\n// TDZ with let\nconsole.log(y); // ReferenceError: Cannot access 'y' before initialization\nlet y = 5;\n\n// const: binding immutable, object mutable\nconst user = { name: 'Maria' };\nuser.name = 'Mafe'; // ✅ Works! Object is mutable\nuser = {}; // ❌ TypeError: Assignment to constant variable",
+      "tags": ["var", "let", "const", "hoisting", "TDZ", "scope"]
+    },
+    {
+      "id": "js_002",
+      "categoryId": "javascript",
+      "difficulty": "intermediate",
+      "type": "theory",
+      "question": "What is a closure in JavaScript? Give a real-world use case.",
+      "options": [
+        "A closure is a way to close/terminate a function's execution",
+        "A closure is when a function retains access to variables from its outer scope even after that scope has finished executing",
+        "A closure only works with arrow functions, not regular functions",
+        "A closure is the same as a class in JavaScript"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A closure is a function that 'remembers' the environment where it was created. Every time you create a function inside another function, the inner function has access to the outer function's variables — even after the outer function returns. This is fundamental for data privacy, memoization, and event handlers.",
+      "codeExample": "// Real use case: private counter (like useState internally!)\nfunction createCounter(initialValue = 0) {\n  let count = initialValue; // Private variable\n  \n  return {\n    increment: () => ++count,\n    decrement: () => --count,\n    reset: () => { count = initialValue; },\n    getCount: () => count,\n  };\n}\n\nconst counter = createCounter(10);\ncounter.increment(); // 11\ncounter.increment(); // 12\nconsole.log(counter.count); // undefined — truly private!\n\n// useCallback in React IS a closure:\nconst handlePress = useCallback(() => {\n  console.log(userId); // 'remembers' userId from outer scope\n}, [userId]);",
+      "tags": ["closure", "scope", "data privacy", "functional"]
+    },
+    {
+      "id": "js_003",
+      "categoryId": "javascript",
+      "difficulty": "intermediate",
+      "type": "practical",
+      "question": "What is event bubbling and event delegation? How do you stop bubbling?",
+      "options": [
+        "Event bubbling is when an event fires from parent to child. stopPropagation() prevents it",
+        "Event bubbling is when an event fires on an element and propagates UP to parent elements. Event delegation uses this to handle multiple children with ONE listener on the parent",
+        "Event delegation means adding individual event listeners to each child element",
+        "stopPropagation() and preventDefault() do the same thing"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Event Bubbling: when you click a button inside a div, the click event fires on the button FIRST, then 'bubbles up' to div, then body, then document. Event Delegation exploits this: instead of adding 100 listeners to 100 items, add ONE listener to the parent and check event.target. e.stopPropagation() stops the bubble. e.preventDefault() stops the browser's default behavior (like form submit).",
+      "codeExample": "// ❌ Bad: 100 listeners for 100 items\nlist.querySelectorAll('li').forEach(li => {\n  li.addEventListener('click', handler); // Memory intensive!\n});\n\n// ✅ Event Delegation: 1 listener for all items\nlist.addEventListener('click', (event) => {\n  // event.target = the exact element clicked\n  if (event.target.tagName === 'LI') {\n    handleItemClick(event.target.dataset.id);\n  }\n});\n\n// Stop bubbling when needed:\nbutton.addEventListener('click', (e) => {\n  e.stopPropagation(); // Don't bubble to parent\n  e.preventDefault();  // Don't submit form\n  handleClick();\n});",
+      "tags": ["events", "bubbling", "delegation", "DOM", "performance"]
+    },
+    {
+      "id": "js_004",
+      "categoryId": "javascript",
+      "difficulty": "intermediate",
+      "type": "practical",
+      "question": "Explain destructuring in JavaScript. What are the advanced use cases?",
+      "options": [
+        "Destructuring only works with arrays, not objects",
+        "Destructuring extracts values from arrays/objects into variables. Advanced: renaming, defaults, rest, nested, function params",
+        "Destructuring creates a deep copy of the object",
+        "Destructuring only works with ES5 syntax"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Destructuring is syntactic sugar for extracting values from objects/arrays. It's EVERYWHERE in React: const { data, loading } = useQuery(); const [state, setState] = useState(). Master all forms — you'll use them daily.",
+      "codeExample": "// Array destructuring\nconst [first, second, ...rest] = [1, 2, 3, 4, 5];\n// first=1, second=2, rest=[3,4,5]\n\n// Object destructuring with rename + default\nconst { name: fullName, age = 18, address: { city } } = user;\n\n// Function parameter destructuring (very common in React)\nfunction UserCard({ name, role = 'Developer', onClick }) {\n  return <Text onPress={onClick}>{name} - {role}</Text>;\n}\n\n// Swap variables without temp!\nlet a = 1, b = 2;\n[a, b] = [b, a]; // a=2, b=1\n\n// React hook: Array destructuring\nconst [count, setCount] = useState(0);\nconst { data, loading, error } = useFetch('/api/users');",
+      "tags": ["destructuring", "ES6", "arrays", "objects", "rest/spread"]
+    },
+    {
+      "id": "js_005",
+      "categoryId": "javascript",
+      "difficulty": "advanced",
+      "type": "theory",
+      "question": "What is currying in functional programming? How does it differ from partial application?",
+      "options": [
+        "Currying is a type of recursion for processing arrays",
+        "Currying transforms a function with multiple args into a sequence of single-arg functions. Partial application fixes some args and returns a function waiting for the rest",
+        "Currying and partial application are identical concepts with different names",
+        "Currying only works with pure functions that return primitives"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Currying: f(a, b, c) → f(a)(b)(c). Each call returns a new function waiting for the next arg. Partial Application: fix SOME args, return function for the remaining. Both enable function composition and reusability — foundational to functional programming.",
+      "codeExample": "// CURRYING: one arg at a time\nconst multiply = (a) => (b) => a * b;\n\nconst double = multiply(2);  // Returns: (b) => 2 * b\nconst triple = multiply(3);  // Returns: (b) => 3 * b\n\ndouble(5);  // 10\ntriple(5);  // 15\n[1,2,3,4].map(double); // [2,4,6,8]\n\n// PARTIAL APPLICATION (with bind)\nfunction add(a, b, c) { return a + b + c; }\nconst add5 = add.bind(null, 5);  // Fix first arg as 5\nadd5(3, 2);  // 10\n\n// Real use case: curried API calls\nconst fetchFrom = (baseUrl) => (endpoint) => fetch(baseUrl + endpoint);\nconst fetchAPI = fetchFrom('https://api.example.com');\nfetchAPI('/users');   // GET https://api.example.com/users\nfetchAPI('/products');",
+      "tags": [
+        "currying",
+        "partial application",
+        "functional programming",
+        "composition"
+      ]
+    },
+    {
+      "id": "js_006",
+      "categoryId": "javascript",
+      "difficulty": "intermediate",
+      "type": "theory",
+      "question": "Explain the difference between async/await and Promises. What happens with error handling?",
+      "options": [
+        "async/await replaces Promises entirely and is always faster",
+        "async/await is syntactic sugar over Promises. async functions always return Promises. await pauses execution within the async function. Use try/catch for errors vs .catch()",
+        "async/await cannot be used with Promise.all()",
+        "await blocks the entire JavaScript thread (synchronous)"
+      ],
+      "correctAnswer": 1,
+      "explanation": "async/await makes asynchronous code READ like synchronous code. async functions ALWAYS return a Promise (even if you return a primitive). await pauses ONLY within the async function, not the whole app — the event loop continues. Errors: use try/catch with await, or .catch() with Promise chains.",
+      "codeExample": "// PROMISE chain\nfetch('/api/user')\n  .then(res => res.json())\n  .then(user => fetchPosts(user.id))\n  .then(posts => console.log(posts))\n  .catch(err => console.error(err)); // Error handling\n\n// ASYNC/AWAIT (same logic, more readable)\nasync function loadUserPosts() {\n  try {\n    const res = await fetch('/api/user');\n    const user = await res.json();\n    const posts = await fetchPosts(user.id);\n    console.log(posts);\n  } catch (err) {\n    console.error(err); // Catches ALL errors above\n  }\n}\n\n// async/await + Promise.all (parallel fetching)\nasync function loadDashboard() {\n  const [user, posts, settings] = await Promise.all([\n    fetch('/api/user').then(r => r.json()),\n    fetch('/api/posts').then(r => r.json()),\n    fetch('/api/settings').then(r => r.json()),\n  ]);\n  // All three resolve simultaneously!\n}",
+      "tags": ["async/await", "promises", "error handling", "concurrency"]
+    },
+    {
+      "id": "ts_001",
+      "categoryId": "typescript",
+      "difficulty": "beginner",
+      "type": "theory",
+      "question": "What is the difference between 'interface' and 'type' in TypeScript? When to use each?",
+      "options": [
+        "They are completely identical; use either one",
+        "interface is for object shapes and is extendable/mergeable via declaration merging. type is more flexible: unions, intersections, primitives, tuples. Prefer interface for objects, type for complex types",
+        "type is deprecated, always use interface",
+        "interface supports generics but type does not"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Both define shapes, but differ in key ways: Interface supports declaration merging (defining it twice merges them), is better for public API contracts. Type supports unions (A | B), intersections (A & B), mapped types, conditional types. Rule of thumb: interface for object shapes/classes, type for everything else.",
+      "codeExample": "// INTERFACE: extendable, mergeable\ninterface User {\n  id: string;\n  name: string;\n}\n\ninterface User { // Declaration merging!\n  email: string; // Now User has id + name + email\n}\n\ninterface AdminUser extends User {\n  role: 'admin';\n}\n\n// TYPE: flexible, composable\ntype ID = string | number; // Union — can't do this with interface!\ntype Status = 'idle' | 'loading' | 'success' | 'error'; // String literal union\ntype Point = { x: number; y: number };\ntype 3DPoint = Point & { z: number }; // Intersection\n\n// When in doubt: interface for React component props\ninterface ButtonProps {\n  label: string;\n  onPress: () => void;\n  variant?: 'primary' | 'secondary';\n}",
+      "tags": ["TypeScript", "interface", "type", "declaration merging"]
+    },
+    {
+      "id": "ts_002",
+      "categoryId": "typescript",
+      "difficulty": "intermediate",
+      "type": "theory",
+      "question": "What are TypeScript Generics and why are they essential for reusable code?",
+      "options": [
+        "Generics are only used in class components, not functional ones",
+        "Generics create reusable components/functions that work with ANY type while preserving type safety. <T> is a type placeholder filled at call time",
+        "Generics replace the 'any' type and always slow down compilation",
+        "Generics are a runtime feature of TypeScript that adds overhead"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Generics are like type-safe templates. Instead of using 'any' (which removes type safety), Generics let you say 'this works with ANY type, and TypeScript will figure it out from context'. Essential for hooks, API wrappers, utility functions, and component libraries.",
+      "codeExample": "// WITHOUT generics (unsafe — loses type info)\nfunction getFirstItem(arr: any[]): any {\n  return arr[0];\n}\n\n// WITH generics (type-safe AND flexible)\nfunction getFirstItem<T>(arr: T[]): T {\n  return arr[0];\n}\n\nconst firstNum = getFirstItem([1, 2, 3]);   // TypeScript knows: number\nconst firstStr = getFirstItem(['a', 'b']);  // TypeScript knows: string\n\n// Generic React hook — the right way!\nfunction useFetch<TData>(url: string) {\n  const [data, setData] = useState<TData | null>(null);\n  const [loading, setLoading] = useState(true);\n  \n  useEffect(() => {\n    fetch(url).then(r => r.json()).then(setData).finally(() => setLoading(false));\n  }, [url]);\n  \n  return { data, loading };\n}\n\n// Usage with full type safety:\nconst { data } = useFetch<User[]>('/api/users'); // data: User[] | null",
+      "tags": ["TypeScript", "generics", "type safety", "reusability"]
+    },
+    {
+      "id": "ts_003",
+      "categoryId": "typescript",
+      "difficulty": "advanced",
+      "type": "theory",
+      "question": "What are TypeScript Utility Types? Name and explain at least 4 essential ones.",
+      "options": [
+        "Utility Types are just type aliases with different names",
+        "Utility Types are built-in type transformers: Partial<T> (all optional), Required<T> (all required), Pick<T, K> (select keys), Omit<T, K> (exclude keys), Record<K, V>, Readonly<T>",
+        "Utility Types only work with interfaces, not type aliases",
+        "Utility Types are deprecated in TypeScript 5+"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Utility Types save you from rewriting type transformations. They are built into TypeScript and essential for real-world apps. Mastering them shows TypeScript fluency in interviews.",
+      "codeExample": "interface User {\n  id: string;\n  name: string;\n  email: string;\n  password: string;\n  age: number;\n}\n\n// Partial<T>: all props OPTIONAL (great for update/PATCH APIs)\ntype UserUpdate = Partial<User>;\n// { id?: string; name?: string; email?: string; ... }\n\n// Required<T>: all props REQUIRED (opposite of Partial)\ntype CompleteUser = Required<User>;\n\n// Pick<T, K>: SELECT specific props\ntype UserPublic = Pick<User, 'id' | 'name' | 'email'>;\n// Removes password! Good for what you return from API\n\n// Omit<T, K>: EXCLUDE specific props\ntype UserWithoutPassword = Omit<User, 'password'>;\n\n// Record<K, V>: dictionary type\ntype CategoryColors = Record<string, string>;\n// { javascript: '#F7DF1E', typescript: '#3178C6', ... }\n\n// ReturnType<T>: extract return type of a function\nfunction getUser() { return { id: '1', name: 'Maria' }; }\ntype UserShape = ReturnType<typeof getUser>; // { id: string; name: string }",
+      "tags": [
+        "TypeScript",
+        "utility types",
+        "Partial",
+        "Pick",
+        "Omit",
+        "Record"
+      ]
+    },
+    {
+      "id": "ts_004",
+      "categoryId": "typescript",
+      "difficulty": "intermediate",
+      "type": "practical",
+      "question": "What is the difference between 'unknown' and 'any' in TypeScript? Which is safer and why?",
+      "options": [
+        "They are identical, both disable type checking",
+        "'any' disables all type checking (escape hatch). 'unknown' is type-safe: you MUST narrow the type before using it. Always prefer 'unknown' over 'any'",
+        "'unknown' is the old name for 'any' in TypeScript 3",
+        "'unknown' can only hold primitive values, 'any' holds objects too"
+      ],
+      "correctAnswer": 1,
+      "explanation": "'any' tells TypeScript: 'trust me, I know what this is' — TypeScript stops checking. It's a red flag in code reviews. 'unknown' says: 'I don't know the type yet' — TypeScript forces you to CHECK before using it. Type narrowing (typeof, instanceof, type guards) is needed to work with 'unknown'.",
+      "codeExample": "// ANY: dangerous — TypeScript trusts you blindly\nfunction parseData(data: any) {\n  console.log(data.name.toUpperCase()); // No error, but crashes at runtime!\n}\n\n// UNKNOWN: type-safe — must narrow before using\nfunction parseData(data: unknown) {\n  // data.name.toUpperCase(); // ❌ Error! Can't use unknown without check\n  \n  // Must narrow the type first:\n  if (typeof data === 'object' && data !== null && 'name' in data) {\n    console.log((data as { name: string }).name.toUpperCase()); // ✅ Safe!\n  }\n}\n\n// Real use case: try/catch — error is unknown since TS 4.0\ntry {\n  await fetchData();\n} catch (error: unknown) {\n  if (error instanceof Error) {\n    console.error(error.message); // Safe! We know it's an Error\n  }\n}",
+      "tags": ["TypeScript", "unknown", "any", "type narrowing", "type guards"]
+    },
+    {
+      "id": "rn_001",
+      "categoryId": "react_next",
+      "difficulty": "intermediate",
+      "type": "theory",
+      "question": "In Next.js, what is the difference between SSR, SSG, ISR, and CSR? When do you use each?",
+      "options": [
+        "They are all the same rendering strategy, just different names",
+        "SSR: renders on every request (fresh data). SSG: renders at build time (static, fastest). ISR: SSG + revalidation interval. CSR: renders in browser (SEO bad but interactive). Choose based on data freshness needs",
+        "SSG always requires a database connection at build time",
+        "CSR is always faster than SSR because it skips the server"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Rendering strategy is one of the most important decisions in Next.js. SSR: always fresh, good for personalized/dynamic content. SSG: lightning fast, pre-built HTML, great for blogs/landing pages. ISR: best of both — static but refreshes every N seconds. CSR: data fetches in the browser, no server needed but bad for SEO.",
+      "codeExample": "// Next.js 14 App Router\n\n// SSG (default): built at compile time\nexport default async function ProductPage({ params }) {\n  const product = await getProduct(params.id);\n  return <ProductDetails product={product} />;\n}\n\n// SSR: re-renders on every request\nexport const dynamic = 'force-dynamic'; // Opt into SSR\n\n// ISR: revalidate every 60 seconds\nexport const revalidate = 60;\n\nexport default async function BlogPage() {\n  const posts = await getPosts(); // Cached, refreshes every 60s\n  return <PostList posts={posts} />;\n}\n\n// CSR: in a Client Component\n'use client';\nfunction LiveFeed() {\n  const { data } = useSWR('/api/feed', fetcher); // Client-side fetch\n  return <Feed data={data} />;\n}",
+      "tags": ["Next.js", "SSR", "SSG", "ISR", "CSR", "rendering"]
+    },
+    {
+      "id": "rn_002",
+      "categoryId": "react_next",
+      "difficulty": "intermediate",
+      "type": "theory",
+      "question": "Explain the difference between useEffect, useLayoutEffect, and useInsertionEffect in React.",
+      "options": [
+        "They are all identical; use useEffect for everything",
+        "useEffect: after paint (async). useLayoutEffect: after DOM mutations but BEFORE paint (blocks paint). useInsertionEffect: before DOM mutations (for CSS-in-JS libraries)",
+        "useLayoutEffect is deprecated in React 18",
+        "useInsertionEffect is the same as useEffect with an empty dependency array"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The ORDER of execution: 1) DOM mutations happen, 2) useInsertionEffect fires (inject styles), 3) useLayoutEffect fires (read/modify DOM synchronously), 4) Browser paints, 5) useEffect fires (side effects). Use useLayoutEffect when you need to measure DOM or prevent visual flicker. Use useEffect for 99% of cases.",
+      "codeExample": "// useEffect (most common): AFTER paint, async\nuseEffect(() => {\n  fetchData(); // API calls, subscriptions, timers\n}, [dependency]);\n\n// useLayoutEffect: BEFORE paint, synchronous\n// USE CASE: measuring DOM elements, tooltips, animations\nuseLayoutEffect(() => {\n  const { width, height } = ref.current.getBoundingClientRect();\n  setDimensions({ width, height }); // No flicker! Runs before user sees paint\n}, []);\n\n// useInsertionEffect: for CSS-in-JS libraries (styled-components, emotion)\n// You'll rarely write this directly\nuseInsertionEffect(() => {\n  const style = document.createElement('style');\n  style.textContent = `.btn { color: red; }`;\n  document.head.appendChild(style);\n}, []);",
+      "tags": ["useEffect", "useLayoutEffect", "React", "DOM", "performance"]
+    },
+    {
+      "id": "rn_003",
+      "categoryId": "react_next",
+      "difficulty": "advanced",
+      "type": "theory",
+      "question": "What are React Server Components (RSC) in Next.js 14? How are they different from Client Components?",
+      "options": [
+        "Server Components are just components rendered with getServerSideProps",
+        "Server Components render ONLY on the server — zero JS sent to client. Client Components ('use client') can use hooks and browser APIs. RSC enables streaming, reduces bundle size, and allows direct DB access",
+        "Server Components require a special export format unlike regular components",
+        "Server Components and Client Components cannot be used in the same tree"
+      ],
+      "correctAnswer": 1,
+      "explanation": "React Server Components is the biggest shift in React since hooks. Server Components: run ONLY on server, zero bundle size, can access DB/filesystem directly, CAN'T use useState/useEffect/browser APIs. Client Components ('use client'): run on server AND client, CAN use hooks. You CAN mix them — Server Components can render Client Components as children.",
+      "codeExample": "// SERVER COMPONENT (default in Next.js App Router)\n// No 'use client' → runs on server ONLY\nasync function ProductList() {\n  // Direct DB access — no API needed!\n  const products = await db.products.findMany();\n  // No JS sent to client for this component\n  return (\n    <div>\n      {products.map(p => (\n        <ProductCard key={p.id} product={p} />\n      ))}\n    </div>\n  );\n}\n\n// CLIENT COMPONENT (needs interactivity)\n'use client';\nfunction AddToCartButton({ productId }) {\n  const [isAdded, setIsAdded] = useState(false); // Hooks OK here!\n  \n  return (\n    <button onClick={() => setIsAdded(true)}>\n      {isAdded ? '✓ Added' : 'Add to Cart'}\n    </button>\n  );\n}",
+      "tags": [
+        "React Server Components",
+        "Next.js",
+        "App Router",
+        "performance",
+        "streaming"
+      ]
+    },
+    {
+      "id": "cc_001",
+      "categoryId": "clean_code",
+      "difficulty": "beginner",
+      "type": "theory",
+      "question": "Explain all 5 SOLID principles with a React/TypeScript example for each.",
+      "options": [
+        "SOLID stands for: Simple, Ordered, Loose, Interactive, Dynamic",
+        "S: Single Responsibility (one reason to change). O: Open/Closed (extend not modify). L: Liskov Substitution (subtypes replaceable). I: Interface Segregation (small interfaces). D: Dependency Inversion (depend on abstractions)",
+        "SOLID only applies to backend code. Frontend only needs DRY",
+        "The 'L' in SOLID stands for Lazy loading"
+      ],
+      "correctAnswer": 1,
+      "explanation": "SOLID is the foundation of maintainable OOP and functional code. Every experienced developer should know these by heart. In interviews, expect to explain at least 2-3 with concrete examples from your actual work.",
+      "codeExample": "// S — Single Responsibility\n// BAD: one component fetches, transforms, AND renders\n// GOOD: useUserData() fetches, UserCard renders\n\n// O — Open/Closed\n// BAD: adding new button type requires modifying Button component\n// GOOD: const VARIANTS = { primary:{}, danger:{} } — add variants, don't modify\n\n// L — Liskov Substitution\n// If component B extends A, B should work wherever A works\ninterface Shape { area(): number; }\nclass Circle implements Shape { area() { return Math.PI * r * r; } }\nclass Square implements Shape { area() { return side * side; } }\n// Both work interchangeably anywhere Shape is expected\n\n// I — Interface Segregation\n// BAD: interface MegaComponent { onPress; onLongPress; onSwipe; onPinch; ... }\n// GOOD: interface Pressable { onPress: () => void; }\n//       interface Swipeable { onSwipe: (dir: string) => void; }\n\n// D — Dependency Inversion\n// BAD: const data = await fetch('/api') — hardcoded\n// GOOD: function useData(repository: IRepository) { ... }",
+      "tags": ["SOLID", "S", "O", "L", "I", "D", "clean code", "TypeScript"]
+    },
+    {
+      "id": "cc_002",
+      "categoryId": "clean_code",
+      "difficulty": "intermediate",
+      "type": "theory",
+      "question": "What is Clean Architecture in a React/Next.js project? How do you structure folders?",
+      "options": [
+        "Clean Architecture means having a /components folder",
+        "Clean Architecture separates concerns into layers: Domain (entities, business logic) → Application (use cases, hooks) → Infrastructure (API, storage) → Presentation (UI). Dependencies point inward",
+        "Clean Architecture requires using Redux as the state manager",
+        "Clean Architecture is only for enterprise apps, not startups"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Clean Architecture's core rule: THE DEPENDENCY RULE — source code dependencies must point INWARD. The domain layer knows nothing about React, the API, or the database. This makes the business logic independently testable and the implementation details swappable.",
+      "codeExample": "// Clean Architecture folder structure:\nsrc/\n├── domain/           // Pure business logic — no React, no fetch!\n│   ├── entities/     // User, Product, Order — plain TypeScript\n│   └── repositories/ // interfaces (contracts, NOT implementations)\n│\n├── application/      // Use cases — orchestrates domain\n│   └── hooks/        // useCreateOrder, useAuthUser\n│\n├── infrastructure/   // External world details\n│   ├── api/          // HTTP clients, fetch wrappers\n│   └── storage/      // AsyncStorage, SQLite adapters\n│\n└── presentation/     // React components — UI only\n    ├── screens/\n    ├── components/\n    └── navigation/\n\n// Domain layer example (no imports from React/fetch):\ninterface UserRepository {\n  findById(id: string): Promise<User>;\n  save(user: User): Promise<void>;\n}\n\nclass AuthUseCase {\n  constructor(private repo: UserRepository) {} // Depends on abstraction!\n  async login(email: string, password: string): Promise<User> {\n    const user = await this.repo.findById(email);\n    if (!user.checkPassword(password)) throw new Error('Invalid');\n    return user;\n  }\n}",
+      "tags": [
+        "clean architecture",
+        "folder structure",
+        "domain",
+        "separation of concerns"
+      ]
+    },
+    {
+      "id": "perf_001",
+      "categoryId": "performance",
+      "difficulty": "intermediate",
+      "type": "theory",
+      "question": "You improved app performance by 30% at Omnitrek. What specific techniques did you use? (Lazy loading, CDN, Code splitting)",
+      "options": [
+        "Just minifying CSS files reduces performance by 30%",
+        "Lazy loading: load components/images only when needed (React.lazy, Suspense, dynamic()). Code splitting: split bundle into smaller chunks loaded on demand. CDN: serve static assets from edge locations closer to users",
+        "Code splitting and lazy loading are the same technique",
+        "CDN only helps with video files, not JavaScript or images"
+      ],
+      "correctAnswer": 1,
+      "explanation": "This is YOUR real experience from Omnitrek! These three techniques together compound beautifully: Code Splitting reduces initial bundle size. Lazy Loading defers loading until needed. CDN reduces latency for asset delivery. Next.js does code splitting automatically per page, and dynamic() adds component-level splitting.",
+      "codeExample": "// 1. LAZY LOADING with React.lazy + Suspense\nconst HeavyChart = React.lazy(() => import('./HeavyChart'));\n\nfunction Dashboard() {\n  return (\n    <Suspense fallback={<Skeleton />}>\n      <HeavyChart /> {/* Only loads when rendered! */}\n    </Suspense>\n  );\n}\n\n// 2. Next.js dynamic() — more powerful\nimport dynamic from 'next/dynamic';\n\nconst Map = dynamic(() => import('./MapComponent'), {\n  loading: () => <MapSkeleton />,\n  ssr: false, // Disable SSR for browser-only libraries\n});\n\n// 3. IMAGE LAZY LOADING (Next.js Image component)\nimport Image from 'next/image';\n\n<Image\n  src=\"/hero.webp\"\n  alt=\"Hero\"\n  loading=\"lazy\"    // Defers load until near viewport\n  priority={false}  // Set true for above-the-fold images\n/>\n\n// 4. CDN via next.config.js\nmodule.exports = {\n  images: { domains: ['cdn.yourapp.com'] },\n  assetPrefix: 'https://cdn.yourapp.com', // Serve assets from CDN\n};",
+      "tags": [
+        "performance",
+        "lazy loading",
+        "code splitting",
+        "CDN",
+        "Next.js",
+        "React.lazy"
+      ]
+    },
+    {
+      "id": "perf_002",
+      "categoryId": "performance",
+      "difficulty": "intermediate",
+      "type": "theory",
+      "question": "What are CSS BEM, SMACSS, and OOCSS? When would you use each methodology?",
+      "options": [
+        "They are all CSS frameworks like Bootstrap or Tailwind",
+        "BEM: Block__Element--Modifier naming convention for CSS scalability. SMACSS: categorizes styles (base, layout, module, state, theme). OOCSS: separates structure from skin for reusability",
+        "BEM is a JavaScript framework, not a CSS methodology",
+        "These are outdated; Tailwind CSS completely replaces all three"
+      ],
+      "correctAnswer": 1,
+      "explanation": "CSS Architectures prevent the 'specificity war' and naming collision hell in large apps. BEM is the most widely used: .block__element--modifier makes the relationship explicit. In React projects, CSS Modules or Tailwind solve similar problems, but understanding BEM shows architectural thinking.",
+      "codeExample": "// BEM: Block__Element--Modifier\n// Block: standalone component\n.card {}\n// Element: child of block (double underscore)\n.card__title {}\n.card__image {}\n.card__footer {}\n// Modifier: variation of block or element (double dash)\n.card--featured {}\n.card--dark {}\n.card__title--large {}\n\n// Usage:\n// <div class='card card--featured'>\n//   <h2 class='card__title card__title--large'>Title</h2>\n//   <img class='card__image'>\n// </div>\n\n// Tailwind equivalently achieves same goals:\n<div className='bg-white rounded-lg shadow-md'>\n  <h2 className='text-2xl font-bold'>Title</h2>\n</div>\n\n// CSS Box Model reminder:\n// total width = content + padding-left + padding-right + border-left + border-right\n// box-sizing: border-box — includes padding+border IN the width",
+      "tags": [
+        "CSS",
+        "BEM",
+        "SMACSS",
+        "OOCSS",
+        "architecture",
+        "naming conventions"
+      ]
+    },
+    {
+      "id": "test_001",
+      "categoryId": "testing",
+      "difficulty": "intermediate",
+      "type": "theory",
+      "question": "What is the difference between unit tests, integration tests, and E2E tests? What tools do you use for each?",
+      "options": [
+        "All tests are the same; the tool used defines the type",
+        "Unit: tests single function/component in isolation (Jest/Vitest). Integration: tests multiple units working together (React Testing Library). E2E: tests full user flows in real browser (Cypress/Playwright)",
+        "Integration tests are just slower unit tests",
+        "E2E tests replace unit tests in modern development"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The Testing Pyramid: many unit tests (fast, cheap) → fewer integration tests → even fewer E2E tests (slow, expensive). React Testing Library philosophy: 'test behavior, not implementation'. From your resume: you have Vitest + React Testing Library certifications — mention this!",
+      "codeExample": "// UNIT TEST (Jest/Vitest): isolated function\nimport { describe, it, expect } from 'vitest';\nimport { getGrade } from '../utils/helpers';\n\ndescribe('getGrade', () => {\n  it('returns A+ for 95%', () => {\n    expect(getGrade(95).grade).toBe('A+');\n  });\n  it('returns D for 40%', () => {\n    expect(getGrade(40).grade).toBe('D');\n  });\n});\n\n// INTEGRATION TEST (React Testing Library)\nimport { render, screen, fireEvent } from '@testing-library/react';\n\ntest('Button renders and handles click', () => {\n  const handleClick = vi.fn();\n  render(<Button label='Submit' onPress={handleClick} />);\n  \n  fireEvent.press(screen.getByText('Submit'));\n  expect(handleClick).toHaveBeenCalledTimes(1);\n});\n\n// E2E TEST (Cypress)\ndescribe('Login Flow', () => {\n  it('allows user to log in', () => {\n    cy.visit('/login');\n    cy.get('[data-testid=email]').type('mafe@test.com');\n    cy.get('[data-testid=password]').type('password');\n    cy.get('[data-testid=submit]').click();\n    cy.url().should('include', '/dashboard');\n  });\n});",
+      "tags": [
+        "testing",
+        "unit tests",
+        "integration tests",
+        "E2E",
+        "Jest",
+        "Vitest",
+        "Cypress"
+      ]
+    },
+    {
+      "id": "test_002",
+      "categoryId": "testing",
+      "difficulty": "intermediate",
+      "type": "theory",
+      "question": "What is mocking in tests and why is it essential? How do you mock in Jest/Vitest?",
+      "options": [
+        "Mocking means creating fake UI designs to test with",
+        "Mocking replaces real implementations (API calls, modules, functions) with controlled fakes during tests. Essential for: isolation, speed, avoiding external dependencies, testing error states",
+        "Mocking only works with class-based components",
+        "You should never mock — always use real implementations in tests"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Mocking is what makes tests FAST and RELIABLE. Without mocks: your unit tests make real HTTP requests (slow, flaky, depends on network). With mocks: tests run in milliseconds, always return predictable data, and can simulate errors. vi.fn() / jest.fn() creates a spy that tracks calls.",
+      "codeExample": "// Mock a module\nvi.mock('../api/userApi', () => ({\n  fetchUser: vi.fn().mockResolvedValue({ id: '1', name: 'Maria' }),\n}));\n\n// Mock a function and track calls\nconst mockOnPress = vi.fn();\nrender(<Button onPress={mockOnPress} label='Click me' />);\nfireEvent.press(screen.getByText('Click me'));\n\nexpect(mockOnPress).toHaveBeenCalledTimes(1);\nexpect(mockOnPress).toHaveBeenCalledWith(); // With specific args\n\n// Mock fetch globally\nglobal.fetch = vi.fn().mockResolvedValue({\n  ok: true,\n  json: () => Promise.resolve({ users: [] }),\n});\n\n// Mock and simulate ERROR states:\nglobal.fetch = vi.fn().mockRejectedValue(new Error('Network Error'));\n// Now test your error handling code!",
+      "tags": ["mocking", "vi.fn()", "jest.fn()", "Vitest", "testing", "spies"]
+    },
+    {
+      "id": "beh_001",
+      "categoryId": "behavioral",
+      "difficulty": "beginner",
+      "type": "theory",
+      "question": "How would you introduce yourself in English using your ~4 years of experience at Omnitrek? Structure your answer.",
+      "options": [
+        "Just list your skills without context",
+        "Use Present-Past-Future: Current role/skills (30s) → Key achievements at Omnitrek with numbers (45s) → Why this role excites you (30s). Lead with impact.",
+        "Recite your resume from the beginning chronologically",
+        "Mention your personal life and hobbies first to seem approachable"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Present-Past-Future with numbers makes you memorable. Your real achievements: 30% performance improvement, 20% team efficiency with Storybook, zero-downtime CI/CD. Mention your AI-native workflow with Cursor — it's a differentiator that senior devs appreciate.",
+      "codeExample": "// YOUR PERSONAL 'TELL ME ABOUT YOURSELF' SCRIPT\n// (Practice this until it's natural!)\n\n// PRESENT (current skills + role):\n'I am a Front-End Developer with nearly 4 years of professional\nexperience building scalable web applications with React, Next.js,\nand TypeScript. I also recently expanded into backend development\nwith Java and Spring Boot through an intensive bootcamp.'\n\n// PAST (your Omnitrek achievements — USE NUMBERS):\n'At Omnitrek, where I have been working as a contractor for the\npast few years, I improved application performance by 30% through\nlazy loading, CDN integration, and Bun.js optimization. I also\nled the implementation of Storybook for component-driven development,\nwhich improved our team delivery efficiency by 20%.'\n\n// DIFFERENTIATOR (your AI-native workflow):\n'I am particularly proficient with AI-native development workflows\nusing tools like Cursor and OpenCode, which allows me to prototype,\ndebug complex logic, and adapt to new tech stacks significantly faster.'\n\n// FUTURE (why this role):\n'I am excited about this opportunity because [specific reason about\nthe company/tech]. It aligns perfectly with my goal of [your goal].'",
+      "tags": [
+        "behavioral",
+        "introduction",
+        "STAR",
+        "self-presentation",
+        "Omnitrek"
+      ]
+    },
+    {
+      "id": "beh_002",
+      "categoryId": "behavioral",
+      "difficulty": "intermediate",
+      "type": "theory",
+      "question": "How do you explain the Storybook implementation that improved team efficiency by 20%? Use the STAR method.",
+      "options": [
+        "Just say 'I implemented Storybook' without context",
+        "STAR: Situation (team lacking component documentation) → Task (your responsibility) → Action (set up Storybook, wrote stories, created guidelines) → Result (20% efficiency improvement, specific metrics)",
+        "Downplay it because 20% might seem small",
+        "Only mention the technical implementation, skip the business impact"
+      ],
+      "correctAnswer": 1,
+      "explanation": "This is gold in your resume — a real, quantified achievement. Interviewers LOVE specific numbers. Don't just say 'I used Storybook' — explain the BEFORE (problem), the WHY you chose Storybook, the WHAT you built, and the RESULT with metrics.",
+      "codeExample": "// YOUR STORYBOOK STAR STORY\n// (Customize with actual details from your experience)\n\n// SITUATION:\n'Our React application at Omnitrek had over 50 UI components\nbut no visual documentation. New developers spent significant\ntime understanding existing components before they could\ncontribute, and designers had difficulty seeing all component\nstates without running the full app.'\n\n// TASK:\n'I was tasked with improving the developer onboarding experience\nand reducing the friction between design and development.'\n\n// ACTION:\n'I proposed and implemented Storybook as our component catalog.\nI wrote stories for all existing components covering multiple\nstates (loading, error, empty, filled), integrated it with our\nCI/CD pipeline via Netlify, and created documentation guidelines\nso the whole team could maintain it going forward.'\n\n// RESULT:\n'This resulted in a 20% improvement in team development efficiency,\nmeasured through our sprint velocity metrics. New developers could\nonboard to the component library in hours instead of days, and\ndesign reviews dropped from 2 rounds to 1 on average.'",
+      "tags": ["behavioral", "STAR", "Storybook", "Omnitrek", "achievement"]
+    },
+    {
+      "id": "acc_001",
+      "categoryId": "accessibility",
+      "difficulty": "intermediate",
+      "type": "theory",
+      "question": "What is WAI-ARIA and why is it important? What are the key ARIA attributes you should know?",
+      "options": [
+        "WAI-ARIA is a CSS framework for creating accessible color schemes",
+        "WAI-ARIA is a specification that adds semantic meaning to HTML for screen readers and assistive technologies. Key attributes: role, aria-label, aria-labelledby, aria-describedby, aria-hidden, aria-live",
+        "WAI-ARIA only matters for government websites",
+        "WAI-ARIA replaces semantic HTML elements like <nav> and <button>"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Accessibility is NOT optional — it's in your skills evaluation (mandatory: WAI-ARIA). ARIA fills gaps when HTML semantics aren't enough. Rule: first use semantic HTML (<button>, <nav>, <main>). Add ARIA only when HTML isn't sufficient. ARIA on wrong elements can WORSEN accessibility.",
+      "codeExample": "// Semantic HTML FIRST (no ARIA needed)\n<button onClick={handleSubmit}>Submit</button> // Already accessible!\n<nav aria-label='Main navigation'>...</nav>\n<main>...</main>\n\n// ARIA for custom components where HTML falls short\n// 1. Custom toggle button\n<div\n  role='button'\n  aria-pressed={isActive}\n  aria-label='Toggle dark mode'\n  tabIndex={0}\n  onClick={toggle}\n  onKeyDown={(e) => e.key === 'Enter' && toggle()}\n/>\n\n// 2. Live regions (screen reader announces changes)\n<div aria-live='polite' aria-atomic='true'>\n  {statusMessage}\n</div>\n\n// 3. Loading state\n<div role='status' aria-busy={isLoading}>\n  {isLoading ? 'Loading...' : content}\n</div>\n\n// 4. Modal dialog\n<div role='dialog' aria-modal='true' aria-labelledby='modal-title'>\n  <h2 id='modal-title'>Confirm Action</h2>\n</div>\n\n// 5. Hide decorative elements\n<img src='decorative.png' alt='' aria-hidden='true' />",
+      "tags": ["accessibility", "WAI-ARIA", "WCAG", "screen readers", "a11y"]
+    },
+    {
+      "id": "acc_002",
+      "categoryId": "accessibility",
+      "difficulty": "intermediate",
+      "type": "theory",
+      "question": "What is the difference between localStorage, sessionStorage, and Cookies? When do you use each?",
+      "options": [
+        "They all store data the same way, just with different capacities",
+        "localStorage: persists until manually cleared (~5-10MB). sessionStorage: cleared when tab closes. Cookies: sent with EVERY HTTP request, can be HTTP-only (XSS safe), have expiry dates. Use cookies for auth tokens, localStorage for user preferences",
+        "Cookies are insecure and should never be used for authentication",
+        "sessionStorage persists between browser restarts"
+      ],
+      "correctAnswer": 1,
+      "explanation": "These are in your skills evaluation (mandatory). Key insight: localStorage and sessionStorage are client-side only (vulnerable to XSS). Cookies with HttpOnly=true are NOT accessible via JavaScript — making them the SECURE choice for auth tokens. Never store tokens in localStorage!",
+      "codeExample": "// localStorage: persists until manually cleared\nlocalStorage.setItem('theme', 'dark');\nconst theme = localStorage.getItem('theme');\nlocalStorage.removeItem('theme');\n// Use for: user preferences, non-sensitive settings\n\n// sessionStorage: cleared on tab/browser close  \nsessionStorage.setItem('draftPost', JSON.stringify(draftData));\n// Use for: form drafts, session-specific temp data\n\n// Cookies: sent with every HTTP request\ndocument.cookie = 'username=maria; max-age=3600; SameSite=Strict';\n\n// SECURE auth token pattern (server sets this):\n// Set-Cookie: authToken=xyz123; HttpOnly; Secure; SameSite=Strict\n// HttpOnly → NOT accessible via JS → XSS protection!\n// Secure → HTTPS only\n// SameSite=Strict → CSRF protection\n\n// In React, a common pattern:\nconst useLocalStorage = <T>(key: string, initial: T) => {\n  const [value, setValue] = useState<T>(() => {\n    const stored = localStorage.getItem(key);\n    return stored ? JSON.parse(stored) : initial;\n  });\n  \n  const setStored = (newValue: T) => {\n    setValue(newValue);\n    localStorage.setItem(key, JSON.stringify(newValue));\n  };\n  \n  return [value, setStored] as const;\n};",
+      "tags": [
+        "localStorage",
+        "sessionStorage",
+        "cookies",
+        "security",
+        "storage",
+        "auth"
+      ]
+    },
+    {
+      "id": "acc_003",
+      "categoryId": "accessibility",
+      "difficulty": "advanced",
+      "type": "theory",
+      "question": "What is Storybook and how does it implement component-driven development? (From your Omnitrek experience)",
+      "options": [
+        "Storybook is a testing framework like Jest for snapshot testing",
+        "Storybook is a UI workshop: isolated component development with interactive documentation. Each 'story' shows a component state. Enables design-dev collaboration, visual regression testing, and auto-documentation",
+        "Storybook requires Redux to manage component state",
+        "Storybook only works with class-based React components"
+      ],
+      "correctAnswer": 1,
+      "explanation": "This is YOUR real experience! Storybook implements the Component Story Format (CSF). Each story = one component state. Decorators wrap stories with providers (ThemeProvider, Router). Addons enable: controls (interactive props), actions (event tracking), accessibility audit, viewport testing.",
+      "codeExample": "// Story format (CSF 3.0)\nimport type { Meta, StoryObj } from '@storybook/react';\nimport Button from './Button';\n\n// Meta: component-level config\nconst meta = {\n  title: 'Components/Button',\n  component: Button,\n  parameters: {\n    layout: 'centered',\n  },\n  // Auto-generate controls from TypeScript props!\n  argTypes: {\n    variant: { control: 'select' },\n    disabled: { control: 'boolean' },\n  },\n} satisfies Meta<typeof Button>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\n// Each export = one story (one component state)\nexport const Primary: Story = {\n  args: { label: 'Click me', variant: 'primary' },\n};\n\nexport const Disabled: Story = {\n  args: { label: 'Disabled', variant: 'primary', disabled: true },\n};\n\nexport const Loading: Story = {\n  args: { label: 'Loading', variant: 'primary', loading: true },\n};\n\n// This is exactly what you built at Omnitrek!",
+      "tags": [
+        "Storybook",
+        "component-driven",
+        "documentation",
+        "Omnitrek",
+        "CSF"
+      ]
+    }
+  ]
+}
